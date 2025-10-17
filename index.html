@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ahorcado — Dragon Ball Z (Modo 2 Jugadores)</title>
+  <style>
+    :root{
+      --bg:#081022;
+      --card:#0f1724;
+      --accent:#ff9800;
+      --accent-2:#1976d2;
+      --muted:#94a3b8;
+      --glass: rgba(255,255,255,0.03);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;min-height:100vh;font-family:Inter,system-ui;background:radial-gradient(circle at 10% 10%,#05203a 0%,var(--bg) 40%),linear-gradient(180deg,#001021 0%,#021428 100%);color:#e6eef6;display:flex;align-items:center;justify-content:center;padding:28px;
+    }
+    .container{width:100%;max-width:980px;background:var(--glass);border-radius:14px;padding:20px;box-shadow:0 8px 30px rgba(2,6,23,0.7);display:grid;grid-template-columns:360px 1fr;gap:20px;align-items:start}
+    header{grid-column:1 / -1;display:flex;align-items:center;gap:12px}
+    .logo{width:52px;height:52px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#ffd08a);display:grid;place-items:center;color:#081022;font-weight:800;font-size:18px;box-shadow:0 6px 18px rgba(255,152,0,0.15)}
+    h1{margin:0;font-size:20px}
+    p.lead{margin:0;color:var(--muted);font-size:13px}
+    .left{padding:12px;background:var(--glass);border-radius:10px}
+    .gallows{width:260px;height:240px}
+    .balls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+    .ball{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(180deg,#ffb74d,#f57c00);box-shadow:0 6px 12px rgba(245,124,0,0.25);border:2px solid rgba(0,0,0,0.18)}
+    .ball.inactive{filter:grayscale(1) brightness(0.6);opacity:0.25;box-shadow:none}
+    .right{padding:18px}
+    .word{font-size:34px;letter-spacing:8px;text-align:center;margin:12px 0}
+    .controls{display:flex;gap:10px;justify-content:center;margin-bottom:14px;flex-wrap:wrap}
+    button.btn{background:linear-gradient(180deg,var(--accent),#d46b00);border:none;padding:8px 12px;border-radius:8px;color:#051122;font-weight:700;cursor:pointer}
+    button.btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+    .hint{color:var(--muted);text-align:center;font-size:14px;margin-bottom:10px}
+    .keyboard{display:grid;grid-template-columns:repeat(13,1fr);gap:8px;margin-top:8px}
+    .key{padding:10px 6px;border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.02);text-align:center;cursor:pointer;user-select:none}
+    .key.used{opacity:0.35;cursor:default}
+    .key.wrong{background:rgba(255,80,80,0.12)}
+    .key.right{background:rgba(80,255,120,0.06)}
+    .status{margin-top:12px;text-align:center}
+    .small{font-size:13px;color:var(--muted)}
+    footer{grid-column:1 / -1;text-align:center;padding-top:6px;color:var(--muted);font-size:13px}
+    @media(max-width:880px){.container{grid-template-columns:1fr}.gallows{width:200px;height:180px}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">DBZ</div>
+      <div>
+        <h1>El Ahorcado DBZ — 2 Jugadores</h1>
+        <p class="lead">Adivina las palabras de Dragon Ball Z en 30 segundos. ¡Compite por puntos!</p>
+      </div>
+    </header>
+
+    <aside class="left">
+      <svg class="gallows" viewBox="0 0 200 200">
+        <line x1="10" y1="190" x2="120" y2="190" stroke="#7f8b99" stroke-width="4" />
+        <line x1="40" y1="190" x2="40" y2="30" stroke="#7f8b99" stroke-width="6" />
+        <line x1="40" y1="30" x2="120" y2="30" stroke="#7f8b99" stroke-width="6" />
+        <line x1="120" y1="30" x2="120" y2="50" stroke="#7f8b99" stroke-width="4" />
+        <g id="part-0" style="opacity:0"><circle cx="120" cy="65" r="12" fill="#ffe0b2" stroke="#c07a4a" stroke-width="2"/></g>
+        <g id="part-1" style="opacity:0"><line x1="120" y1="77" x2="120" y2="120" stroke="#ffe0b2" stroke-width="6"/></g>
+        <g id="part-2" style="opacity:0"><line x1="120" y1="85" x2="100" y2="102" stroke="#ffe0b2" stroke-width="5"/></g>
+        <g id="part-3" style="opacity:0"><line x1="120" y1="85" x2="140" y2="102" stroke="#ffe0b2" stroke-width="5"/></g>
+        <g id="part-4" style="opacity:0"><line x1="120" y1="120" x2="105" y2="150" stroke="#ffe0b2" stroke-width="5"/></g>
+        <g id="part-5" style="opacity:0"><line x1="120" y1="120" x2="135" y2="150" stroke="#ffe0b2" stroke-width="5"/></g>
+        <g id="part-6" style="opacity:0"><path d="M95 20 L105 34 L95 34 L115 60" stroke="#ffd54f" stroke-width="3" fill="none"/></g>
+      </svg>
+      <div class="balls" id="balls"></div>
+      <div class="small">Intentos restantes: <span id="lives">7</span></div>
+      <div class="small">Tiempo: <span id="timer">30</span>s</div>
+      <div class="small">Jugador actual: <span id="currentPlayer">1</span></div>
+      <div class="small">Puntos J1: <span id="score1">0</span> | J2: <span id="score2">0</span></div>
+    </aside>
+
+    <main class="right">
+      <div class="hint" id="hint">Pista: —</div>
+      <div class="word" id="word">_ _ _ _</div>
+      <div class="controls">
+        <button class="btn" id="btnHint">Pista</button>
+        <button class="btn secondary" id="btnReset">Reiniciar</button>
+        <button class="btn secondary" id="btnNew">Nueva palabra</button>
+      </div>
+      <div class="keyboard" id="keyboard"></div>
+      <div class="status small">Letras erradas: <span id="wrongLetters">—</span></div>
+    </main>
+
+    <footer>Modo 2 Jugadores con tiempo y puntos — Dragon Ball Z</footer>
+  </div>
+
+  <script>
+    (function(){
+      const WORDS=[{w:'GOKU',hint:'Protagonista Saiyajin'},{w:'VEGETA',hint:'Príncipe Saiyajin'},{w:'GOHAN',hint:'Hijo de Goku'},{w:'FRIEZA',hint:'Tirano galáctico'},{w:'CELL',hint:'Bioandroide'},{w:'BROLY',hint:'Saiyajin legendario'}];
+      const MAX_LIVES=7;const MAX_TIME=30;
+      let lives,timer,chosen,revealed,wrong,correct,currentPlayer=1,score1=0,score2=0,timeLeft,interval;
+      const wordEl=document.getElementById('word'),keyboardEl=document.getElementById('keyboard'),ballsEl=document.getElementById('balls'),livesEl=document.getElementById('lives'),wrongLettersEl=document.getElementById('wrongLetters'),hintEl=document.getElementById('hint'),timerEl=document.getElementById('timer'),playerEl=document.getElementById('currentPlayer'),score1El=document.getElementById('score1'),score2El=document.getElementById('score2');
+      const ALPHABET='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+      function makeKeyboard(){keyboardEl.innerHTML='';for(const c of ALPHABET){const b=document.createElement('button');b.className='key';b.textContent=c;b.onclick=()=>handleGuess(c);keyboardEl.appendChild(b)}}
+      function drawBalls(){ballsEl.innerHTML='';for(let i=0;i<MAX_LIVES;i++){const d=document.createElement('div');d.className='ball'+(i<lives?'':' inactive');ballsEl.appendChild(d)}livesEl.textContent=lives}
+      function pickWord(){return WORDS[Math.floor(Math.random()*WORDS.length)]}
+
+      function startGame(newWord=true){clearInterval(interval);wrong=new Set();correct=new Set();lives=MAX_LIVES;timeLeft=MAX_TIME;for(let i=0;i<7;i++)document.getElementById('part-'+i).style.opacity=0;if(newWord||!chosen)chosen=pickWord();revealed=Array.from(chosen.w).map(c=>'?');updateWordDisplay();makeKeyboard();drawBalls();wrongLettersEl.textContent='—';hintEl.textContent='Pista: —';timerEl.textContent=timeLeft;startTimer();}
+
+      function startTimer(){clearInterval(interval);interval=setInterval(()=>{timeLeft--;timerEl.textContent=timeLeft;if(timeLeft<=0){clearInterval(interval);switchPlayer();}},1000)}
+
+      function handleGuess(l){if(timeLeft<=0)return;if(correct.has(l)||wrong.has(l))return;const pos=[];for(let i=0;i<chosen.w.length;i++){if(chosen.w[i]===l)pos.push(i)}if(pos.length){pos.forEach(i=>revealed[i]=l);correct.add(l);markKey(l,'right');updateWordDisplay();if(!revealed.includes('?'))winRound();}else{wrong.add(l);lives--;markKey(l,'wrong');updateWrongUI();revealNextPart();drawBalls();if(lives<=0)loseRound();}}
+
+      function markKey(l,cls){const b=[...keyboardEl.children].find(x=>x.textContent===l);if(b)b.classList.add('used',cls)}
+      function updateWordDisplay(){wordEl.textContent=revealed.map(c=>c==='?'?'_':c).join(' ')}
+      function updateWrongUI(){wrongLettersEl.textContent=[...wrong].join(', ')||'—'}
+      function revealNextPart(){const idx=MAX_LIVES-lives;if(idx<7)document.getElementById('part-'+idx).style.opacity=1}
+
+      function winRound(){clearInterval(interval);alert('Jugador '+currentPlayer+' gana esta ronda!');if(currentPlayer===1)score1+=10;else score2+=10;updateScores();switchPlayer();}
+      function loseRound(){clearInterval(interval);alert('Tiempo o vidas agotadas. Palabra era: '+chosen.w);switchPlayer();}
+      function switchPlayer(){currentPlayer=currentPlayer===1?2:1;playerEl.textContent=currentPlayer;startGame(true)}
+      function updateScores(){score1El.textContent=score1;score2El.textContent=score2}
+
+      document.getElementById('btnHint').onclick=()=>{hintEl.textContent='Pista: '+chosen.hint};
+      document.getElementById('btnReset').onclick=()=>startGame(false);
+      document.getElementById('btnNew').onclick=()=>startGame(true);
+
+      window.onkeydown=e=>{const k=e.key.toUpperCase();if(ALPHABET.includes(k))handleGuess(k)};
+
+      makeKeyboard();startGame(true);
+    })();
+  </script>
+</body>
+</html>
