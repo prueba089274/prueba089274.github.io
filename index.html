@@ -3,25 +3,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ahorcado — Dragon Ball Z (Modo 2 Jugadores)</title>
+  <title>Ahorcado — Capitales de Colombia (2 Jugadores)</title>
   <style>
     :root{
-      --bg:#081022;
-      --card:#0f1724;
-      --accent:#ff9800;
-      --accent-2:#1976d2;
-      --muted:#94a3b8;
-      --glass: rgba(255,255,255,0.03);
+      --bg:#081022;--card:#0f1724;--accent:#ff9800;--muted:#94a3b8;--glass:rgba(255,255,255,0.03);
     }
     *{box-sizing:border-box}
-    body{
-      margin:0;min-height:100vh;font-family:Inter,system-ui;background:radial-gradient(circle at 10% 10%,#05203a 0%,var(--bg) 40%),linear-gradient(180deg,#001021 0%,#021428 100%);color:#e6eef6;display:flex;align-items:center;justify-content:center;padding:28px;
-    }
+    body{margin:0;min-height:100vh;font-family:Inter,system-ui;background:radial-gradient(circle at 10% 10%,#05203a 0%,var(--bg) 40%),linear-gradient(180deg,#001021 0%,#021428 100%);color:#e6eef6;display:flex;align-items:center;justify-content:center;padding:28px}
     .container{width:100%;max-width:980px;background:var(--glass);border-radius:14px;padding:20px;box-shadow:0 8px 30px rgba(2,6,23,0.7);display:grid;grid-template-columns:360px 1fr;gap:20px;align-items:start}
-    header{grid-column:1 / -1;display:flex;align-items:center;gap:12px}
+    header{grid-column:1/-1;display:flex;align-items:center;gap:12px}
     .logo{width:52px;height:52px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#ffd08a);display:grid;place-items:center;color:#081022;font-weight:800;font-size:18px;box-shadow:0 6px 18px rgba(255,152,0,0.15)}
-    h1{margin:0;font-size:20px}
-    p.lead{margin:0;color:var(--muted);font-size:13px}
+    h1{margin:0;font-size:20px}p.lead{margin:0;color:var(--muted);font-size:13px}
     .left{padding:12px;background:var(--glass);border-radius:10px}
     .gallows{width:260px;height:240px}
     .balls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
@@ -38,19 +30,18 @@
     .key.used{opacity:0.35;cursor:default}
     .key.wrong{background:rgba(255,80,80,0.12)}
     .key.right{background:rgba(80,255,120,0.06)}
-    .status{margin-top:12px;text-align:center}
-    .small{font-size:13px;color:var(--muted)}
-    footer{grid-column:1 / -1;text-align:center;padding-top:6px;color:var(--muted);font-size:13px}
+    .status{margin-top:12px;text-align:center}.small{font-size:13px;color:var(--muted)}
+    footer{grid-column:1/-1;text-align:center;padding-top:6px;color:var(--muted);font-size:13px}
     @media(max-width:880px){.container{grid-template-columns:1fr}.gallows{width:200px;height:180px}}
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <div class="logo">DBZ</div>
+      <div class="logo">CO</div>
       <div>
-        <h1>El Ahorcado DBZ — 2 Jugadores</h1>
-        <p class="lead">Adivina las palabras de Dragon Ball Z en 30 segundos. ¡Compite por puntos!</p>
+        <h1>El Ahorcado — Capitales de Colombia</h1>
+        <p class="lead">Adivina las capitales de los departamentos en 60 segundos. Dos jugadores compiten.</p>
       </div>
     </header>
 
@@ -69,15 +60,15 @@
         <g id="part-6" style="opacity:0"><path d="M95 20 L105 34 L95 34 L115 60" stroke="#ffd54f" stroke-width="3" fill="none"/></g>
       </svg>
       <div class="balls" id="balls"></div>
-      <div class="small">Intentos restantes: <span id="lives">7</span></div>
-      <div class="small">Tiempo: <span id="timer">30</span>s</div>
-      <div class="small">Jugador actual: <span id="currentPlayer">1</span></div>
+      <div class="small">Intentos: <span id="lives">7</span></div>
+      <div class="small">Tiempo: <span id="timer">60</span>s</div>
+      <div class="small">Jugador: <span id="currentPlayer">1</span></div>
       <div class="small">Puntos J1: <span id="score1">0</span> | J2: <span id="score2">0</span></div>
     </aside>
 
     <main class="right">
       <div class="hint" id="hint">Pista: —</div>
-      <div class="word" id="word">_ _ _ _</div>
+      <div class="word" id="word">_ _ _</div>
       <div class="controls">
         <button class="btn" id="btnHint">Pista</button>
         <button class="btn secondary" id="btnReset">Reiniciar</button>
@@ -87,13 +78,45 @@
       <div class="status small">Letras erradas: <span id="wrongLetters">—</span></div>
     </main>
 
-    <footer>Modo 2 Jugadores con tiempo y puntos — Dragon Ball Z</footer>
+    <footer>Juego educativo: Capitales de los Departamentos de Colombia 🇨🇴</footer>
   </div>
 
   <script>
     (function(){
-      const WORDS=[{w:'GOKU',hint:'Protagonista Saiyajin'},{w:'VEGETA',hint:'Príncipe Saiyajin'},{w:'GOHAN',hint:'Hijo de Goku'},{w:'FRIEZA',hint:'Tirano galáctico'},{w:'CELL',hint:'Bioandroide'},{w:'BROLY',hint:'Saiyajin legendario'}];
-      const MAX_LIVES=7;const MAX_TIME=30;
+      const WORDS=[
+        {w:'LETICIA',hint:'Capital de Amazonas'},
+        {w:'MEDELLIN',hint:'Capital de Antioquia'},
+        {w:'ARAUCA',hint:'Capital de Arauca'},
+        {w:'BARRANQUILLA',hint:'Capital de Atlántico'},
+        {w:'CARTAGENA',hint:'Capital de Bolívar'},
+        {w:'TUNJA',hint:'Capital de Boyacá'},
+        {w:'MANIZALES',hint:'Capital de Caldas'},
+        {w:'FLORENCIA',hint:'Capital de Caquetá'},
+        {w:'POPAYAN',hint:'Capital de Cauca'},
+        {w:'VALLEDUPAR',hint:'Capital de Cesar'},
+        {w:'QUIBDO',hint:'Capital de Chocó'},
+        {w:'MONTERIA',hint:'Capital de Córdoba'},
+        {w:'BOGOTA',hint:'Capital de Cundinamarca'},
+        {w:'INIRIDA',hint:'Capital de Guainía'},
+        {w:'SANJOSEDELGUAVIARE',hint:'Capital de Guaviare'},
+        {w:'NEIVA',hint:'Capital del Huila'},
+        {w:'RIOHACHA',hint:'Capital de La Guajira'},
+        {w:'SANTAMARTA',hint:'Capital de Magdalena'},
+        {w:'VILLAVICENCIO',hint:'Capital del Meta'},
+        {w:'PASTO',hint:'Capital de Nariño'},
+        {w:'CUCUTA',hint:'Capital de Norte de Santander'},
+        {w:'MOCOA',hint:'Capital de Putumayo'},
+        {w:'ARMENIA',hint:'Capital del Quindío'},
+        {w:'PEREIRA',hint:'Capital de Risaralda'},
+        {w:'SANANDRES',hint:'Capital de San Andrés y Providencia'},
+        {w:'BUCARAMANGA',hint:'Capital de Santander'},
+        {w:'SINCELEJO',hint:'Capital de Sucre'},
+        {w:'IBAGUE',hint:'Capital del Tolima'},
+        {w:'CALI',hint:'Capital del Valle del Cauca'},
+        {w:'MITU',hint:'Capital de Vaupés'},
+        {w:'PUERTOCARRENO',hint:'Capital de Vichada'}
+      ];
+      const MAX_LIVES=7;const MAX_TIME=60;
       let lives,timer,chosen,revealed,wrong,correct,currentPlayer=1,score1=0,score2=0,timeLeft,interval;
       const wordEl=document.getElementById('word'),keyboardEl=document.getElementById('keyboard'),ballsEl=document.getElementById('balls'),livesEl=document.getElementById('lives'),wrongLettersEl=document.getElementById('wrongLetters'),hintEl=document.getElementById('hint'),timerEl=document.getElementById('timer'),playerEl=document.getElementById('currentPlayer'),score1El=document.getElementById('score1'),score2El=document.getElementById('score2');
       const ALPHABET='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -114,7 +137,7 @@
       function revealNextPart(){const idx=MAX_LIVES-lives;if(idx<7)document.getElementById('part-'+idx).style.opacity=1}
 
       function winRound(){clearInterval(interval);alert('Jugador '+currentPlayer+' gana esta ronda!');if(currentPlayer===1)score1+=10;else score2+=10;updateScores();switchPlayer();}
-      function loseRound(){clearInterval(interval);alert('Tiempo o vidas agotadas. Palabra era: '+chosen.w);switchPlayer();}
+      function loseRound(){clearInterval(interval);alert('Tiempo o vidas agotadas. La capital era: '+chosen.w);switchPlayer();}
       function switchPlayer(){currentPlayer=currentPlayer===1?2:1;playerEl.textContent=currentPlayer;startGame(true)}
       function updateScores(){score1El.textContent=score1;score2El.textContent=score2}
 
